@@ -707,8 +707,7 @@ ${a.dateCompleted ? `<div style="color: #6b7a8f; font-size: 12px; margin-top: 4p
    <div style="display: flex; gap: 12px; justify-content: flex-end;">
      ${a.status !== 'completed' && a.status === 'available' ? `<button id="compBtn" class="warframe-btn primary">COMPLETE MISSION</button>` : ''}
      <button id="closeBtn" class="warframe-btn secondary">CLOSE</button>
-   </div>`;
- 
+   </div>`
  popup.innerHTML = '';
  popup.appendChild(content);
  popup.style.display = 'block';
