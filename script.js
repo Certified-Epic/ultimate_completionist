@@ -162,20 +162,17 @@ function draw() {
 
   // center image
   ctx.save();
-  ctx.drawImage(assets.center, -110, -140, 220, 280);
+  ctx.drawImage(assets.center, -60, -60, 120, 120);
   ctx.restore();
 
   // planets rendering
   if (achievements.planets) {
     achievements.planets.forEach((planet, i) => {
       const angle = i * (2 * Math.PI / achievements.planets.length) - Math.PI/2;
-      const orbitSpeed = 0.1 + i * 0.02;
-const px = Math.cos(angle + time * orbitSpeed) * coreRadius;
-const py = Math.sin(angle + time * orbitSpeed) * coreRadius;
+      const px = Math.cos(angle) * coreRadius;
+      const py = Math.sin(angle) * coreRadius;
 
       // when hovered, draw an outer glow ring
-      ctx.shadowBlur = 20;
-      ctx.shadowColor = 'rgba(100, 223, 255, 0.7)';
       if (hovered && hovered.type === 'core' && hovered.index === i) {
         ctx.beginPath();
         ctx.lineWidth = 6 / camera.scale;
@@ -184,7 +181,6 @@ const py = Math.sin(angle + time * orbitSpeed) * coreRadius;
         ctx.stroke();
       }
 
-      ctx.shadowBlur = 0;
       // planet sprite
       ctx.drawImage(assets.planet, px - planetSize/2, py - planetSize/2, planetSize, planetSize);
 
@@ -327,17 +323,10 @@ canvas.addEventListener('mousemove', e => {
   hoverInfo.style.top = (e.clientY + 18) + 'px';
 });
 
-
 canvas.addEventListener('wheel', e => {
-  const mouseX = (e.clientX - width/2) / camera.scale - camera.x;
-  const mouseY = (e.clientY - height/2) / camera.scale - camera.y;
-  const zoomAmount = Math.max(0.25, Math.min(6, targetCamera.scale * (1 - e.deltaY * 0.0012)));
-  targetCamera.x = mouseX - (mouseX - targetCamera.x) * (targetCamera.scale / zoomAmount);
-  targetCamera.y = mouseY - (mouseY - targetCamera.y) * (targetCamera.scale / zoomAmount);
-  targetCamera.scale = zoomAmount;
-  try { sounds.zoom.play().catch(() => {}); } catch(e) {}
-});
- catch(e){}
+  const delta = -e.deltaY * 0.0012;
+  targetCamera.scale = Math.max(0.25, Math.min(6, targetCamera.scale + delta));
+  try{ sounds.zoom.play().catch(()=>{}); }catch(e){}
 });
 
 // Touch support (basic)
@@ -365,9 +354,8 @@ function detectHover(mx, my) {
   if (!achievements.planets) return null;
   for (let i = 0; i < achievements.planets.length; i++) {
     const angle = i * (2 * Math.PI / achievements.planets.length) - Math.PI/2;
-    const orbitSpeed = 0.1 + i * 0.02;
-const px = Math.cos(angle + time * orbitSpeed) * coreRadius;
-const py = Math.sin(angle + time * orbitSpeed) * coreRadius;
+    const px = Math.cos(angle) * coreRadius;
+    const py = Math.sin(angle) * coreRadius;
     if (distance(mx, my, px, py) < planetSize * 0.6) {
       return { type: 'core', index: i };
     }
@@ -443,7 +431,7 @@ function handleClick(hit) {
     const angle = i * (2 * Math.PI / achievements.planets.length) - Math.PI/2;
     targetCamera.x = -Math.cos(angle) * coreRadius;
     targetCamera.y = -Math.sin(angle) * coreRadius;
-    targetCamera.scale = 2.2;
+    targetCamera.scale = 1.6;
     focusedCore = i;
     focusedTier = null;
     populateSidePanelForPlanet(i);
@@ -451,15 +439,14 @@ function handleClick(hit) {
   } else if (hit.type === 'tier') {
     const i = hit.core, j = hit.tier;
     const angle = i * (2 * Math.PI / achievements.planets.length) - Math.PI/2;
-    const orbitSpeed = 0.1 + i * 0.02;
-const px = Math.cos(angle + time * orbitSpeed) * coreRadius;
-const py = Math.sin(angle + time * orbitSpeed) * coreRadius;
+    const px = Math.cos(angle) * coreRadius;
+    const py = Math.sin(angle) * coreRadius;
     const tangle = j * (2 * Math.PI / achievements.planets[i].tiers.length);
     const tx = px + Math.cos(tangle) * tierRadius;
     const ty = py + Math.sin(tangle) * tierRadius;
     targetCamera.x = -tx;
     targetCamera.y = -ty;
-    targetCamera.scale = 4.2;
+    targetCamera.scale = 3.4;
     focusedCore = i; focusedTier = j;
     populateSidePanelForTier(i, j);
     try{ sounds.zoom.play().catch(()=>{}); }catch(e){}
