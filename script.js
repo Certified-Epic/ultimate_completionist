@@ -319,10 +319,9 @@ canvas.addEventListener('mousemove', e => {
   const newHover = detectHover(mx, my);
   setHovered(newHover);
   // position hoverInfo near cursor (dom)
-  hoverInfo.style.left = (e.clientX + 18) + 'px';
-  hoverInfo.style.top = (e.clientY + 18) + 'px';
+hoverInfo.style.left = (e.clientX + 18) + 'px';
+hoverInfo.style.top = (e.clientY + 18) + 'px';
 });
-
 
 canvas.addEventListener('wheel', e => {
   const mouseX = (e.clientX - width/2) / camera.scale - camera.x;
@@ -334,9 +333,6 @@ canvas.addEventListener('wheel', e => {
   targetCamera.scale = newScale;
   try { sounds.zoom.play().catch(() => {}); } catch(e) {}
 });
- catch(e){}
-});
-
 // Touch support (basic)
 canvas.addEventListener('touchstart', e => {
   if (e.touches.length === 1) {
