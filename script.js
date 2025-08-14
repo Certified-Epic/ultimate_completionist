@@ -323,10 +323,18 @@ canvas.addEventListener('mousemove', e => {
   hoverInfo.style.top = (e.clientY + 18) + 'px';
 });
 
+
 canvas.addEventListener('wheel', e => {
-  const delta = -e.deltaY * 0.0012;
-  targetCamera.scale = Math.max(0.25, Math.min(6, targetCamera.scale + delta));
-  try{ sounds.zoom.play().catch(()=>{}); }catch(e){}
+  const mouseX = (e.clientX - width/2) / camera.scale - camera.x;
+  const mouseY = (e.clientY - height/2) / camera.scale - camera.y;
+  const zoomFactor = 1 - e.deltaY * 0.0012;
+  const newScale = Math.max(0.25, Math.min(6, targetCamera.scale * zoomFactor));
+  targetCamera.x = mouseX - (mouseX - targetCamera.x) * (targetCamera.scale / newScale);
+  targetCamera.y = mouseY - (mouseY - targetCamera.y) * (targetCamera.scale / newScale);
+  targetCamera.scale = newScale;
+  try { sounds.zoom.play().catch(() => {}); } catch(e) {}
+});
+ }catch(e){}
 });
 
 // Touch support (basic)

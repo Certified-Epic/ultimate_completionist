@@ -1,10 +1,10 @@
 /* Base */
 :root{
-  --bg: #061217; 
-  --panel-bg: rgba(6, 10, 15, 0.85);
-  --accent: #64dfff;
-  --muted: rgba(255,255,255,0.6);
-  --glass: rgba(255,255,255,0.03);
+  --bg: #0a0f1f; 
+  --panel-bg: rgba(10, 15, 30, 0.85);
+  --accent: #66aaff;
+  --muted: rgba(200, 210, 255, 0.6);
+  --glass: rgba(150, 180, 255, 0.03);
 }
 
 html,body{ height:100%; margin:0; background:#000; font-family: "Segoe UI", Roboto, Arial; color:#fff; }
