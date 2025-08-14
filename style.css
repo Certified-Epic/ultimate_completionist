@@ -1,189 +1,74 @@
-/* Base */
-:root{
-  --bg: #0a0f1f; 
-  --panel-bg: rgba(10, 15, 30, 0.85);
-  --accent: #66aaff;
-  --muted: rgba(200, 210, 255, 0.6);
-  --glass: rgba(150, 180, 255, 0.03);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Star Chart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="solar-system">
+    <div class="orbit orbit-1"></div>
+    <div class="orbit orbit-2"></div>
+    <div class="orbit orbit-3"></div>
+    <div class="orbit orbit-4"></div>
+  </div>
+  <canvas id="starChart"></canvas>
 
-html,body{ height:100%; margin:0; background:#000; font-family: "Segoe UI", Roboto, Arial; color:#fff; }
+  <!-- Hover info -->
+  <div id="hoverInfo" class="hover-info">
+    <div class="hi-title"></div>
+    <div class="hi-desc"></div>
+    <div class="hi-resources"></div>
+  </div>
 
-canvas { display:block; width:100%; height:100vh; background: transparent; }
+  <!-- Side panel -->
+  <div id="sidePanel" class="side-panel hidden">
+    <div class="side-header">
+      <div id="sideTitle">Star Chart</div>
+      <div class="side-controls">
+        <button id="zoomOutBtn">Zoom Out</button>
+        <button id="recenterBtn">Recenter</button>
+      </div>
+    </div>
+    <div class="meta-line" id="planetName"></div>
+    <div class="meta-line" id="planetMeta"></div>
+    <div id="tiersSection" class="panel-section">
+      <h3>Tiers</h3>
+      <div id="tiersList" class="tiers-list"></div>
+    </div>
+    <div id="junctionSection" class="panel-section">
+      <h3>Junction</h3>
+      <div id="junctionList" class="junction-list"></div>
+    </div>
+  </div>
 
-/* Hover info (small card near cursor) */
-.hover-info{
-  position: fixed;
-  pointer-events:none;
-  left: 12px;
-  top: 12px;
-  transform: translate(0,0);
-  background: var(--panel-bg);
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 10px 12px;
-  border-radius: 8px;
-  min-width: 180px;
-  max-width: 320px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-  transition: transform 120ms ease, opacity 120ms ease;
-  opacity: 0;
-  z-index: 20;
-}
-.hover-info.show{ opacity: 1; pointer-events:auto; }
-.hover-info .hi-title{ font-weight:700; color:var(--accent); margin-bottom:6px; }
-.hover-info .hi-resources{ font-size: 13px; color:var(--muted); }
+  <!-- Achievement popup -->
+  <div id="popup" class="popup hidden"></div>
 
-/* Side panel */
-.side-panel{
-  position: fixed;
-  right: 20px;
-  top: 48px;
-  bottom: 20px;
-  width: 360px;
-  background: linear-gradient(180deg, rgba(12,16,20,0.92), rgba(6,10,15,0.86));
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 10px;
-  padding: 12px;
-  z-index: 15;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  transform: translateY(0);
-}
-.side-panel .side-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding-bottom:6px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.side-panel .side-header #sideTitle{ font-size:18px; font-weight:700; color:var(--accent); }
-.side-controls button{ margin-left:8px; padding:6px 8px; border-radius:6px; background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); cursor:pointer; }
+  <!-- Junction modal -->
+  <div id="junctionModal" class="modal hidden">
+    <div class="modal-inner">
+      <button class="modal-close" id="junctionClose">✕</button>
+      <h2 id="junctionTitle">Junction Tasks</h2>
+      <div id="junctionTasks"></div>
+      <div class="modal-actions">
+        <button id="junctionComplete">Mark Task Completed</button>
+      </div>
+    </div>
+  </div>
 
-.panel-section{ overflow:auto; max-height:38vh; padding:8px 0; }
-.hidden{ display:none; }
+  <!-- Admin panel -->
+  <div id="adminPanel" class="modal hidden">
+    <div class="modal-inner">
+      <button onclick="closeAdmin()">✕</button>
+      <div>Admin password: <input id="adminPassword" type="password"><button onclick="loginAdmin()">Login</button><button onclick="closeAdmin()">Close</button></div>
+      <div id="editContent" style="display:none;"></div>
+    </div>
+  </div>
 
-.meta-line{ color:var(--muted); font-size:13px; margin-bottom:8px; }
+  <button id="adminButton" onclick="showAdminPanel()">Admin</button>
 
-/* Tiers list */
-.tiers-list{ display:flex; flex-direction:column; gap:8px; }
-.tier-card{
-  display:flex; gap:10px; align-items:flex-start; padding:10px; border-radius:8px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border: 1px solid rgba(255,255,255,0.03);
-}
-.tier-card .tier-meta{ flex:1; }
-.tier-title{ font-weight:700; color:#fff; margin-bottom:6px; }
-.tier-achievements{ display:flex; gap:6px; flex-wrap:wrap; }
-.ach-pill{
-  background: var(--glass); border: 1px solid rgba(255,255,255,0.03);
-  padding:4px 8px; border-radius:6px; font-size:12px; color:var(--muted); cursor:pointer;
-  transition: transform 100ms ease, background 160ms ease;
-}
-.ach-pill:hover{ transform: translateY(-3px); background: rgba(100,223,255,0.06); color: #fff; }
-
-/* Junction list */
-.junction-list{ display:flex; flex-direction:column; gap:8px; }
-.junction-task{ padding:8px; border-radius:6px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); }
-
-/* popup (achievement detail) */
-.popup{
-  position: fixed;
-  right: 50%;
-  top: 50%;
-  transform: translate(50%, -50%);
-  background: var(--panel-bg);
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 18px; border-radius:10px; z-index:30; min-width:320px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.8);
-}
-.popup h2{ margin:0 0 8px 0; color:var(--accent); }
-.popup p{ color:var(--muted); }
-
-/* Modal */
-.modal{ position:fixed; inset:0; background: rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:40; }
-.modal-inner{ width:560px; max-width:92%; background: var(--panel-bg); padding:18px; border-radius:10px; position:relative; border:1px solid rgba(255,255,255,0.06); }
-.modal-close{ position:absolute; right:12px; top:12px; background:transparent; border:none; color:var(--muted); font-size:18px; cursor:pointer; }
-.modal-actions{ margin-top:10px; text-align:right; }
-
-/* Admin panel button */
-#adminButton{ position: fixed; left: 12px; bottom: 12px; z-index:30; padding:8px 10px; border-radius:8px; background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04); color:var(--muted); cursor:pointer; }
-
-/* small responsive tweaks */
-@media (max-width: 900px){
-  .side-panel{ width: 320px; right: 8px; }
-}
-
-/* Solar System Orbits (CSS only) */
-body {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Create a container for the solar system */
-.solar-system {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Base styles for all orbits */
-.orbit {
-  position: absolute;
-  border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.2); /* Changed from 1px to 3px */
-  pointer-events: none;
-  animation: rotate 100s linear infinite;
-}
-
-/* Individual orbit sizes - adjust to match your layout */
-.orbit-1 {
-  width: 200px;
-  height: 200px;
-  top: -100px;
-  left: -100px;
-}
-.orbit-2 {
-  width: 300px;
-  height: 300px;
-  top: -150px;
-  left: -150px;
-}
-.orbit-3 {
-  width: 400px;
-  height: 400px;
-  top: -200px;
-  left: -200px;
-}
-.orbit-4 {
-  width: 500px;
-  height: 500px;
-  top: -250px;
-  left: -250px;
-}
-
-/* Add rings for planets like Saturn */
-.planet.saturn::after {
-  content: '';
-  position: absolute;
-  width: 150%;
-  height: 150%;
-  border-radius: 50%;
-  border: 4px solid rgba(255, 255, 255, 0.4); /* Changed from 2px to 4px */
-  top: -25%;
-  left: -25%;
-  transform: rotateX(70deg);
-  pointer-events: none;
-}
-
-/* Keyframe animation for rotation */
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+  <script src="script.js"></script>
+</body>
+</html>
