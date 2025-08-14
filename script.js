@@ -73,10 +73,11 @@ let focusedPlanet = null;
 let hovered = null;
 
 const coreRadius = 500;
-const tierRadius = 150;
+const tierRadius = 250; // Increased to spread out tier planets
 const planetSize = 50;
 const tierSize = 30;
 const achievementSize = 10;
+const achievementRadius = 80; // Increased for spread
 
 let starParticles = [];
 for (let i = 0; i < 200; i++) {
@@ -113,6 +114,18 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  // Central orbital rings
+  ctx.strokeStyle = colors.line;
+  ctx.lineWidth = 1 / camera.scale;
+  ctx.globalAlpha = 0.5;
+  ctx.beginPath();
+  ctx.arc(0, 0, coreRadius, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, coreRadius + 20, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
   // Central image
   ctx.drawImage(assets.center, -50, -50, 100, 100);
 
@@ -121,6 +134,14 @@ function draw() {
       const angle = i * (Math.PI * 2 / 5);
       const px = Math.cos(angle) * coreRadius;
       const py = Math.sin(angle) * coreRadius;
+
+      // Radial lines from center to core planets
+      ctx.strokeStyle = colors.pulse;
+      ctx.lineWidth = 2 / camera.scale;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(px, py);
+      ctx.stroke();
 
       // Orbital rings for core
       ctx.strokeStyle = colors.line;
@@ -207,8 +228,8 @@ function draw() {
           const numAch = tier.achievements.length;
           tier.achievements.forEach((ach, k) => {
             const aangle = k * (Math.PI * 2 / numAch);
-            const ax = tx + Math.cos(aangle) * 50;
-            const ay = ty + Math.sin(aangle) * 50;
+            const ax = tx + Math.cos(aangle) * achievementRadius;
+            const ay = ty + Math.sin(aangle) * achievementRadius;
 
             // Branch with glow
             ctx.shadowColor = colors.glow;
@@ -329,8 +350,8 @@ canvas.addEventListener('mousemove', (e) => {
         if (focusedCore === i && focusedPlanet === j) {
           tier.achievements.forEach((ach, k) => {
             const aangle = k * (Math.PI * 2 / tier.achievements.length);
-            const ax = tx + Math.cos(aangle) * 50;
-            const ay = ty + Math.sin(aangle) * 50;
+            const ax = tx + Math.cos(aangle) * achievementRadius;
+            const ay = ty + Math.sin(aangle) * achievementRadius;
             if (Math.hypot(mx - ax, my - ay) < achievementSize / 2) {
               hovered = { type: 'achievement', core: i, tier: j, ach: k };
               hoveredSound = true;
@@ -384,7 +405,6 @@ canvas.addEventListener('mouseup', (e) => {
     } else if (hovered.type === 'junction') {
       const { core, tier } = hovered;
       const currentTier = achievements.planets[core].tiers[tier];
-      const nextTier = achievements.planets[core].tiers[tier + 1];
       let html = '';
       currentTier.achievements.forEach(ach => {
         html += `<li class="${ach.status === 'completed' ? 'completed' : ''}">${ach.title}</li>`;
