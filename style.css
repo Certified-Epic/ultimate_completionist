@@ -117,8 +117,8 @@ canvas { display:block; width:100%; height:100vh; background: transparent; }
 
 /* Solar System Orbits (CSS only) */
 body {
-  position: relative; /* Needed for positioning the orbits */
-  overflow: hidden; /* Prevents scrollbars from appearing */
+  position: relative;
+  overflow: hidden;
 }
 
 /* Create a container for the solar system */
@@ -133,9 +133,9 @@ body {
 .orbit {
   position: absolute;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Thin, muted line */
-  pointer-events: none; /* Allows clicks to pass through */
-  animation: rotate 100s linear infinite; /* Example animation, adjust time */
+  border: 3px solid rgba(255, 255, 255, 0.2); /* Changed from 1px to 3px */
+  pointer-events: none;
+  animation: rotate 100s linear infinite;
 }
 
 /* Individual orbit sizes - adjust to match your layout */
@@ -163,19 +163,18 @@ body {
   top: -250px;
   left: -250px;
 }
-/* Add more orbits as needed */
 
 /* Add rings for planets like Saturn */
 .planet.saturn::after {
   content: '';
   position: absolute;
-  width: 150%; /* Make the ring wider than the planet */
+  width: 150%;
   height: 150%;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  border: 4px solid rgba(255, 255, 255, 0.4); /* Changed from 2px to 4px */
   top: -25%;
   left: -25%;
-  transform: rotateX(70deg); /* Tilt the ring for a 3D effect */
+  transform: rotateX(70deg);
   pointer-events: none;
 }
 
