@@ -337,7 +337,7 @@ canvas.addEventListener('wheel', e => {
   targetCamera.scale = zoomAmount;
   try { sounds.zoom.play().catch(() => {}); } catch(e) {}
 });
- }catch(e){}
+ catch(e){}
 });
 
 // Touch support (basic)
