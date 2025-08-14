@@ -1,5 +1,5 @@
 // Updated script.js — improved interface & hover/tier/junction UI
-// Keeps achievements.json untouched and still uses localStorage for progress.
+// Keeps achievements.json untouched and still uses localStorage for progress. 
 
 // -- Canvas setup & asset loading --
 const canvas = document.getElementById('starChart');
