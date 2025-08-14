@@ -1,189 +1,87 @@
-/* Base */
-:root{
-  --bg: #061217; 
-  --panel-bg: rgba(6, 10, 15, 0.85);
-  --accent: #64dfff;
-  --muted: rgba(255,255,255,0.6);
-  --glass: rgba(255,255,255,0.03);
-}
-
-html,body{ height:100%; margin:0; background:#000; font-family: "Segoe UI", Roboto, Arial; color:#fff; }
-
-canvas { display:block; width:100%; height:100vh; background: transparent; }
-
-/* Hover info (small card near cursor) */
-.hover-info{
-  position: fixed;
-  pointer-events:none;
-  left: 12px;
-  top: 12px;
-  transform: translate(0,0);
-  background: var(--panel-bg);
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 10px 12px;
-  border-radius: 8px;
-  min-width: 180px;
-  max-width: 320px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-  transition: transform 120ms ease, opacity 120ms ease;
-  opacity: 0;
-  z-index: 20;
-}
-.hover-info.show{ opacity: 1; pointer-events:auto; }
-.hover-info .hi-title{ font-weight:700; color:var(--accent); margin-bottom:6px; }
-.hover-info .hi-resources{ font-size: 13px; color:var(--muted); }
-
-/* Side panel */
-.side-panel{
-  position: fixed;
-  right: 20px;
-  top: 48px;
-  bottom: 20px;
-  width: 360px;
-  background: linear-gradient(180deg, rgba(12,16,20,0.92), rgba(6,10,15,0.86));
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 10px;
-  padding: 12px;
-  z-index: 15;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  transform: translateY(0);
-}
-.side-panel .side-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding-bottom:6px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.side-panel .side-header #sideTitle{ font-size:18px; font-weight:700; color:var(--accent); }
-.side-controls button{ margin-left:8px; padding:6px 8px; border-radius:6px; background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); cursor:pointer; }
-
-.panel-section{ overflow:auto; max-height:38vh; padding:8px 0; }
-.hidden{ display:none; }
-
-.meta-line{ color:var(--muted); font-size:13px; margin-bottom:8px; }
-
-/* Tiers list */
-.tiers-list{ display:flex; flex-direction:column; gap:8px; }
-.tier-card{
-  display:flex; gap:10px; align-items:flex-start; padding:10px; border-radius:8px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border: 1px solid rgba(255,255,255,0.03);
-}
-.tier-card .tier-meta{ flex:1; }
-.tier-title{ font-weight:700; color:#fff; margin-bottom:6px; }
-.tier-achievements{ display:flex; gap:6px; flex-wrap:wrap; }
-.ach-pill{
-  background: var(--glass); border: 1px solid rgba(255,255,255,0.03);
-  padding:4px 8px; border-radius:6px; font-size:12px; color:var(--muted); cursor:pointer;
-  transition: transform 100ms ease, background 160ms ease;
-}
-.ach-pill:hover{ transform: translateY(-3px); background: rgba(100,223,255,0.06); color: #fff; }
-
-/* Junction list */
-.junction-list{ display:flex; flex-direction:column; gap:8px; }
-.junction-task{ padding:8px; border-radius:6px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); }
-
-/* popup (achievement detail) */
-.popup{
-  position: fixed;
-  right: 50%;
-  top: 50%;
-  transform: translate(50%, -50%);
-  background: var(--panel-bg);
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 18px; border-radius:10px; z-index:30; min-width:320px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.8);
-}
-.popup h2{ margin:0 0 8px 0; color:var(--accent); }
-.popup p{ color:var(--muted); }
-
-/* Modal */
-.modal{ position:fixed; inset:0; background: rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:40; }
-.modal-inner{ width:560px; max-width:92%; background: var(--panel-bg); padding:18px; border-radius:10px; position:relative; border:1px solid rgba(255,255,255,0.06); }
-.modal-close{ position:absolute; right:12px; top:12px; background:transparent; border:none; color:var(--muted); font-size:18px; cursor:pointer; }
-.modal-actions{ margin-top:10px; text-align:right; }
-
-/* Admin panel button */
-#adminButton{ position: fixed; left: 12px; bottom: 12px; z-index:30; padding:8px 10px; border-radius:8px; background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04); color:var(--muted); cursor:pointer; }
-
-/* small responsive tweaks */
-@media (max-width: 900px){
-  .side-panel{ width: 320px; right: 8px; }
-}
-
-/* Solar System Orbits (CSS only) */
 body {
-  position: relative;
+  margin: 0;
   overflow: hidden;
+  background: black;
 }
 
-/* Create a container for the solar system */
-.solar-system {
+canvas {
+  display: block;
+}
+
+.popup {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 20px;
+  border: 1px solid white;
+  z-index: 10;
+  max-width: 400px;
+  text-align: center;
 }
 
-/* Base styles for all orbits */
-.orbit {
+.side-panel {
   position: absolute;
-  border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.2); /* Changed from 1px to 3px */
-  pointer-events: none;
-  animation: rotate 100s linear infinite;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 20px;
+  width: 250px;
+  height: 100vh;
+  overflow: auto;
+  z-index: 10;
+  border-right: 1px solid rgba(255,255,255,0.2);
 }
 
-/* Individual orbit sizes - adjust to match your layout */
-.orbit-1 {
-  width: 200px;
-  height: 200px;
-  top: -100px;
-  left: -100px;
-}
-.orbit-2 {
-  width: 300px;
-  height: 300px;
-  top: -150px;
-  left: -150px;
-}
-.orbit-3 {
-  width: 400px;
-  height: 400px;
-  top: -200px;
-  left: -200px;
-}
-.orbit-4 {
-  width: 500px;
-  height: 500px;
-  top: -250px;
-  left: -250px;
+.side-panel h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
 }
 
-/* Add rings for planets like Saturn */
-.planet.saturn::after {
-  content: '';
+.side-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+.side-panel li {
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.side-panel li:before {
+  content: " ";
   position: absolute;
-  width: 150%;
-  height: 150%;
-  border-radius: 50%;
-  border: 4px solid rgba(255, 255, 255, 0.4); /* Changed from 2px to 4px */
-  top: -25%;
-  left: -25%;
-  transform: rotateX(70deg);
-  pointer-events: none;
+  left: 0;
+  top: 0;
+  font-size: 1.2em;
 }
 
-/* Keyframe animation for rotation */
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.side-panel li.completed:before {
+  content: "✔";
+  color: green;
+}
+
+.admin-panel {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 20px;
+  border: 1px solid white;
+  z-index: 10;
+  max-height: 80vh;
+  overflow: auto;
+  width: 80%;
+}
+
+#adminButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
 }
