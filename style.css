@@ -187,3 +187,24 @@ body {
     transform: rotate(360deg);
   }
 }
+/* Enhanced glowing lines and futuristic elements */
+canvas {
+  filter: drop-shadow(0 0 10px rgba(100, 223, 255, 0.2)); /* Subtle glow on entire chart */
+}
+
+/* Update hover info for futuristic look */
+.hover-info {
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(100, 223, 255, 0.1);
+}
+
+/* Side panel glow */
+.side-panel {
+  box-shadow: 0 0 20px rgba(100, 223, 255, 0.1);
+}
+
+/* Orbit lines enhancement (if using CSS orbits, but since canvas handles it, this is optional for background) */
+.orbit {
+  border: 3px solid rgba(100, 223, 255, 0.15); /* Glowing blue orbits */
+  animation: rotate 120s linear infinite; /* Slower for minimal feel */
+}
