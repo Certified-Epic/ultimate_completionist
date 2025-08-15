@@ -7,13 +7,7 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-<div class="solar-system">
-  <div class="orbit orbit-1"></div>
-  <div class="orbit orbit-2"></div>
-  <div class="orbit orbit-3"></div>
-  <div class="orbit orbit-4"></div>
-</div>
-  <canvas id="starChart"></canvas>
+  <canvas id="starChart" aria-label="Star Chart Canvas"></canvas>
 
   <!-- Hover resource tooltip -->
   <div id="hoverInfo" class="hover-info" aria-hidden="true">
@@ -66,7 +60,7 @@
     </div>
   </div>
 
-  <!-- Admin panel (same functionality as before, improved layout) -->
+  <!-- Admin panel (improved layout) -->
   <div id="adminPanel" class="admin-panel" style="display:none;">
     <div>
       <label>Admin password: <input id="adminPassword" type="password" /></label>
